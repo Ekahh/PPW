@@ -62,3 +62,25 @@ window.onscroll = () => {
     body.classList.remove("active");
   }
 };
+
+const passwordInput = document.getElementById("password");
+const confirmPasswordInput = document.getElementById("confirm-password");
+const togglePasswordIcon = document.getElementById("toggle-password");
+const toggleConfirmPasswordIcon = document.getElementById(
+  "toggle-confirm-password"
+);
+
+togglePasswordIcon.addEventListener("click", function () {
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+  } else {
+    passwordInput.type = "password";
+  }
+});
+
+toggleConfirmPasswordIcon.addEventListener("click", function () {
+  const type = confirmPasswordInput.type === "password" ? "text" : "password";
+  confirmPasswordInput.type = type;
+  this.classList.toggle("fa-eye");
+  this.classList.toggle("fa-eye-slash");
+});
