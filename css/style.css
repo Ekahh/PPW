@@ -542,6 +542,13 @@ section {
   padding: 2rem;
 }
 
+.courses .box-container .tutor-find {
+  padding: 1rem 0;
+  font-size: 1.8rem;
+  color: var(--light-color);
+  line-height: 2;
+}
+
 .courses .box-container .box .tutor {
   display: flex;
   align-items: center;
@@ -554,6 +561,12 @@ section {
   width: 5rem;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.courses .box-container .box .tutor h2 {
+  font-size: 9rem;
+  color: var(--black);
+  margin-bottom: 0.2rem;
 }
 
 .courses .box-container .box .tutor h3 {
@@ -587,6 +600,12 @@ section {
   height: 20rem;
   object-fit: cover;
   border-radius: 0.5rem;
+}
+
+.courses .box-container .box .title-find {
+  font-size: 2rem;
+  color: var(--black);
+  text-transform: capitalize;
 }
 
 .courses .box-container .box .title {
