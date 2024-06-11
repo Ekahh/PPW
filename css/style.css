@@ -67,6 +67,10 @@ section {
   max-width: 1200px;
 }
 
+.table-container {
+  font-family: "Nunito", sans-serif;
+}
+
 .heading {
   font-size: 2.5rem;
   color: var(--black);
@@ -611,8 +615,12 @@ section {
 .courses .box-container .box .title {
   font-size: 2rem;
   color: var(--black);
-  padding-bottom: 0.5rem;
-  padding-top: 1rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* Jumlah baris maksimum */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 1000ch; /* Batas karakter per baris */
 }
 
 .courses .more-btn {
@@ -742,6 +750,51 @@ section {
   position: relative;
 }
 
+.playlist-videos .box-container .box-teacher {
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  position: relative;
+  max-width: 33%;
+}
+
+.playlist-videos .box-container .box table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Nunito", sans-serif;
+  border: var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.playlist-videos .box-container .box table th,
+.playlist-videos .box-container .box table td {
+  font-family: "Nunito", sans-serif;
+  font-size: 1.8rem;
+  color: var(--black);
+  text-align: center; /* Mengatur teks menjadi rata tengah */
+  vertical-align: middle; /* Mengatur teks menjadi vertikal tengah */
+  padding: 1rem; /* Menambahkan padding 1rem (16px) */
+}
+
+.playlist-videos .box-container .box table th {
+  background-color: var(--main-color);
+  color: var(--white);
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.playlist-videos .box-container .box table tbody tr:nth-child(even) {
+  background-color: var(--light-bg);
+}
+
+/* .playlist-videos .box-container .box table tbody tr:hover {
+  background-color: var(--black);
+  color: var(--white);
+  cursor: pointer;
+} */
+
 .playlist-videos .box-container .box i {
   position: absolute;
   top: 2rem;
@@ -769,7 +822,20 @@ section {
   border-radius: 0.5rem;
 }
 
+.playlist-videos .box-container .box-teacher img {
+  width: 100%;
+  height: 20rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
 .playlist-videos .box-container .box h3 {
+  margin-top: 1.5rem;
+  font-size: 1.8rem;
+  color: var(--black);
+}
+
+.playlist-videos .box-container .box-teacher h3 {
   margin-top: 1.5rem;
   font-size: 1.8rem;
   color: var(--black);
@@ -1271,10 +1337,17 @@ section {
 }
 
 .form-container {
-  min-height: calc(100vh - 20rem);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  min-height: 78vh;
+  /* background-image: url("kkk.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100vh; Tambahkan properti ini */
 }
 
 .form-container form {
@@ -1338,9 +1411,8 @@ section {
   font-size: 2rem;
   padding: 2.5rem 2rem;
   color: var(--black);
-  margin-top: 5rem;
+  margin-top: auto; /* Tambahkan properti ini */
   z-index: 1000;
-  /* padding-bottom: 9.5rem; */
 }
 
 .footer span {
