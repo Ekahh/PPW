@@ -57,8 +57,13 @@ body.dark {
   --border: 0.1rem solid rgba(255, 255, 255, 0.2);
 }
 
-body.active {
-  padding-left: 0;
+.home-container {
+  transition: padding-left 0.3s ease; /* Tambahkan baris ini */
+}
+
+.home-container.active {
+  padding-left: 30rem;
+  transition: padding-left 0.3s ease;
 }
 
 section {
@@ -344,7 +349,7 @@ section {
 
 .side-bar.active {
   left: 0;
-  box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.8);
+  /* box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.8); */
   border-right: 0;
 }
 
@@ -1342,6 +1347,7 @@ section {
   justify-content: center;
   flex-direction: column;
   min-height: 78vh;
+  margin-bottom: 1rem; /* Atur margin bawah sesuai kebutuhan */
   /* background-image: url("kkk.png");
   background-size: cover;
   background-position: center;
@@ -1439,7 +1445,7 @@ section {
 
   .side-bar.active {
     left: 0;
-    box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.8);
+    /* box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.8); */
     border-right: 0;
   }
 }

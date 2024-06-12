@@ -42,15 +42,22 @@ document.querySelector("#search-btn").onclick = () => {
 };
 
 let sideBar = document.querySelector(".side-bar");
+let homeContainer = document.querySelector(".home-container");
+let menuBtn = document.querySelector("#menu-btn");
 
 document.querySelector("#menu-btn").onclick = () => {
+  sideBar.classList.add("active");
+  homeContainer.classList.add("active");
+};
+
+menuBtn.onclick = () => {
   sideBar.classList.toggle("active");
-  body.classList.add("active"); // Tambahkan kelas 'active' ke body saat sidebar ditampilkan
+  homeContainer.classList.toggle("active");
 };
 
 document.querySelector("#close-btn").onclick = () => {
   sideBar.classList.remove("active");
-  body.classList.remove("active"); // Hapus kelas 'active' dari body saat sidebar disembunyikan
+  homeContainer.classList.remove("active");
 };
 
 window.onscroll = () => {
