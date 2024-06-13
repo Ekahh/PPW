@@ -367,6 +367,10 @@ section {
   padding: 2rem;
 }
 
+.home-grid .box-container .box .bot-button {
+  vertical-align: bottom;
+}
+
 .home-grid .box-container .box .title {
   font-size: 2rem;
   color: var(--black);
@@ -549,6 +553,8 @@ section {
   border-radius: 0.5rem;
   background-color: var(--white);
   padding: 2rem;
+  height: 46ch;
+  /* max-height: 46ch; */
 }
 
 .courses .box-container .tutor-find {
@@ -556,6 +562,16 @@ section {
   font-size: 1.8rem;
   color: var(--light-color);
   line-height: 2;
+}
+
+.courses .box-container .box .desc {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; 
 }
 
 .courses .box-container .box .tutor {
@@ -961,6 +977,7 @@ section {
   line-height: 1.5;
   font-size: 1.7rem;
   color: var(--light-color);
+  -webkit-line-clamp: 3;
   margin-top: 2rem;
 }
 

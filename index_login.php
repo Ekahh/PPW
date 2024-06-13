@@ -81,7 +81,7 @@ session_destroy();
     </section>
 
     <footer class="footer-login">
-      &copy;copyright @2024 by <span>Kelompok Ojan</span> | all rights reserved!
+      &copy;copyright @2024 by <span>Kelompok Adnan</span> | all rights reserved!
     </footer>
 
     <!-- custom js file link  -->

@@ -14,13 +14,6 @@ $user_id = $_SESSION['user_id'];
 $tahun = $_SESSION['tahun_angkatan'];
 $peran = $_SESSION['peran'];
 
-// Mendapatkan daftar mahasiswa yang belum memiliki tim
-$sql_all_students = "SELECT * FROM users 
-                     WHERE peran = 'mahasiswa' 
-                     AND user_id != '$user_id'
-                     AND user_id NOT IN (SELECT user_id FROM members)";
-$result_all_students = mysqli_query($koneksi, $sql_all_students);
-
 // Mendapatkan daftar tim yang dibuat oleh pengguna
 $sql_my_teams = "SELECT * FROM teams WHERE leader_id = '$user_id'";
 $result_my_teams = mysqli_query($koneksi, $sql_my_teams);
@@ -36,6 +29,23 @@ if ($result_my_teams && mysqli_num_rows($result_my_teams) > 0) {
 // Ambil pesan undangan dari session (jika ada)
 $invite_message = isset($_SESSION['invite_message']) ? $_SESSION['invite_message'] : "";
 unset($_SESSION['invite_message']); // Hapus pesan dari session setelah ditampilkan
+
+// Mendapatkan daftar mahasiswa yang belum memiliki tim
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search_box'])) {
+    $search_query = $_POST['search_box'];
+    $sql_all_students = "SELECT * FROM users 
+                         WHERE peran = 'mahasiswa' 
+                         AND user_id != '$user_id'
+                         AND user_id NOT IN (SELECT user_id FROM members)
+                         AND (nama LIKE '%$search_query%' OR nim_nid LIKE '%$search_query%')";
+} else {
+    $sql_all_students = "SELECT * FROM users 
+                         WHERE peran = 'mahasiswa' 
+                         AND user_id != '$user_id'
+                         AND user_id NOT IN (SELECT user_id FROM members)";
+}
+
+$result_all_students = mysqli_query($koneksi, $sql_all_students);
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +75,7 @@ unset($_SESSION['invite_message']); // Hapus pesan dari session setelah ditampil
             </a>
 
             <!-- Search Form -->
-            <form action="search.html" method="post" class="search-form">
+            <form action="index_invite_member.php" method="post" class="search-form">
                 <input type="text" name="search_box" required placeholder="search students..." maxlength="100" />
                 <button type="submit" class="fas fa-search"></button>
             </form>

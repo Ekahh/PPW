@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $description = $_POST['desc']; // Mengubah nama kolom dari 'desc' menjadi 'description'
     $pkm_type = $_POST['pkm_type'];
     $leader_id = $_SESSION['user_id'];
+    $member_max = $_POST['member_max']; // Menambahkan pengambilan nilai member_max
 
     // Memeriksa apakah pengguna sudah memiliki tim
     $check_sql = "SELECT * FROM teams WHERE leader_id = '$leader_id'";
@@ -27,9 +28,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "You already have a team. You cannot create more than one team.";
     } else {
         // Memeriksa apakah data sudah diisi
-        if ($team_name != '' && $description != '' && $pkm_type != '') {
+        if ($team_name != '' && $description != '' && $pkm_type != '' && $member_max != '') {
             // Membuat query untuk memasukkan data tim baru
-            $sql = "INSERT INTO teams (team_name, description, leader_id, pkm_type) VALUES ('$team_name', '$description', '$leader_id', '$pkm_type')";
+            $sql = "INSERT INTO teams (team_name, description, leader_id, pkm_type, member_max) VALUES ('$team_name', '$description', '$leader_id', '$pkm_type', '$member_max')";
             $query = mysqli_query($koneksi, $sql);
 
             // Memeriksa apakah query berhasil dijalankan
