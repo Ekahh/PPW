@@ -34,16 +34,16 @@ if (mysqli_num_rows($result_team) == 0) {
 $team = mysqli_fetch_assoc($result_team);
 
 // Mendapatkan detail member
-$sql_member = "SELECT * FROM members WHERE user_id = '$user_id'";
+$sql_member = "SELECT * FROM members WHERE team_id = '$team_id' AND user_id = '$user_id'";
 $result_member = mysqli_query($koneksi, $sql_member);
-
-if (mysqli_num_rows($result_member) == 0) {
-    echo "Team not found.";
-    exit();
-}
 
 $member = mysqli_fetch_assoc($result_member);
 
+// Mendapatkan detail apakah user sudah memiliki tim
+$sql_in_team = "SELECT * FROM members WHERE user_id = '$user_id'";
+$result_in_team = mysqli_query($koneksi, $sql_in_team);
+
+$in_team = mysqli_fetch_assoc($result_in_team);
 
 // Mendapatkan daftar anggota tim
 $sql_my_members = "SELECT * FROM users 
@@ -51,9 +51,10 @@ $sql_my_members = "SELECT * FROM users
                 WHERE members.team_id = '$team_id'";
 $result_my_members = mysqli_query($koneksi, $sql_my_members);
 
-
 $is_leader = ($_SESSION['user_id'] == $team['leader_id']);
-$is_member = ($_SESSION['user_id'] == $member['user_id']);
+$is_in_team = ($_SESSION['user_id'] == $in_team['user_id']);
+$is_member = ($member && $_SESSION['user_id'] == $member['user_id']);
+
 ?>
 
 <!doctype html>
@@ -145,16 +146,19 @@ $is_member = ($_SESSION['user_id'] == $member['user_id']);
                     <h3><?php echo $team['team_name']; ?></h3>
                     <p><?php echo $team['description']; ?></p>
                     <?php
-                    if ($is_leader) {
-                      echo '<a href="index_update_team.php?team_id=' . $team['team_id'] . '" class="inline-btn" style="margin-right: 10px;">Update</a>';
-                      echo '<a class="inline-delete-btn" onclick="togglePopup()" style="margin-right: 10px;">Delete</a>';
-                      echo '<a href="index_invite_member.php?team_id=<?php echo $team_id; ?>" class="inline-option-btn" style="margin-right: 10px;">Invite</a>';
-                    } elseif ($is_member) {
-                      echo '<a href="#" class="inline-delete-btn">leave team</a>';
-                    }
-                    else {
-                      echo '<a href="#" class="inline-btn">Request to join team</a>';
-                    }
+                      // Perbarui bagian HTML yang relevan untuk menambahkan tautan "Leave Team"
+                      if ($is_leader) {
+                          echo '<a href="index_update_team.php?team_id=' . $team['team_id'] . '" class="inline-btn" style="margin-right: 10px;">Update</a>';
+                          echo '<a class="inline-delete-btn" onclick="togglePopup()" style="margin-right: 10px;">Delete</a>';
+                          echo '<a href="index_invite_member.php?team_id=' . $team_id . '" class="inline-option-btn" style="margin-right: 10px;">Invite</a>';
+                      } else if ($is_member) {
+                          echo '<a href="leave_team.php?team_id=' . $team_id . '" class="inline-delete-btn">Leave Team</a>';
+                      } else if ($is_in_team) {
+                         echo '';
+                      }
+                      else {
+                          echo '<a href="#" class="inline-btn">Request to join team</a>';
+                      }
                     ?>
                 </div>
             </div>
@@ -193,14 +197,13 @@ $is_member = ($_SESSION['user_id'] == $member['user_id']);
                                 if ($is_leader) {
                                     // Cek jika peran bukan ketua, tampilkan tombol hapus member
                                     if ($my_member['role'] !== 'ketua') {
-                                        echo "<td style='width: 15%;'>";
-                                        echo "<a href='#' class='delete-btn, inline-delete-btn'>Hapus</a>";
-                                        echo "</td>";
+                                      echo "<td style='width: 15%;'>";
+                                      echo "<a href='delete_member.php?team_id={$team_id}&member_id={$my_member['user_id']}' class='delete-btn inline-delete-btn'>Hapus</a>";
+                                      echo "</td>";
                                     } else {
-                                        echo "<td style='width: 15%;'></td>"; 
+                                      echo "<td style='width: 15%;'></td>"; 
                                     }
-                                }
-                                echo "</tr>";
+                                }                                echo "</tr>";
                             }
                         } else {
                             echo "<tr><td colspan='5'>No members found.</td></tr>";

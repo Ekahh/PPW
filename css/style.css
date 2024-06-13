@@ -553,8 +553,8 @@ section {
   border-radius: 0.5rem;
   background-color: var(--white);
   padding: 2rem;
-  height: 46ch;
-  /* max-height: 46ch; */
+  /* height: 46ch; */
+  max-height: 46ch;
 }
 
 .courses .box-container .tutor-find {

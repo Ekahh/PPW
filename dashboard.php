@@ -154,7 +154,7 @@ $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
                     echo "<h3 class='title'>" . $row['team_name'] . " [" . $row['member_now'] . "/" . $row['member_max'] . "]" . "</h3>";
                     echo "<h3 class='tutor'>" . $row['description'] . "</h3>";
                     echo "<div class='box'>";
-                    echo "<a href='index_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Members</a>";
+                    echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Members</a>";
                     echo "</div>";
                     echo "</div>";
                 }
@@ -191,7 +191,7 @@ $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
                     if ($is_leader) {
                         echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>Manage Members</a>";
                     } else {
-                        echo "<a href='index_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Members</a>";
+                        echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Members</a>";
                     }
                     echo "</div>";
                 }
