@@ -119,14 +119,8 @@ if (!empty($team_id)) {
         /><!-- seharusnya ada required di sini -->
 
         <p>Deskripsi <span>*</span></p>
-        <input
-          type="textarea" 
-          name="new_desc" 
-          placeholder="New Description" 
-          value="<?php echo $new_desc ? $new_desc : $desc; ?>"
-          maxlength="50"
-          class="box"
-        /><!-- seharusnya ada required di sini -->
+        <textarea rows="4" cols="50" value="<?php echo $new_desc ? $new_desc : $desc; ?>" placeholder="Masukkan Deskripsi" name="new_desc" class="box"></textarea>
+        <!-- seharusnya ada required di sini -->
 
         <div class="form-group">
           <p>Jenis Peran <span>*</span></p>

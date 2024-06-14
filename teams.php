@@ -59,7 +59,7 @@ $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
     <!-- custom css file link  -->
     <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
+  <body class= "home-container">
 
     <!-- ini navbar dibiarkan saja -->
     <header class="header">

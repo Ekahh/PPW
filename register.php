@@ -12,16 +12,22 @@ $email = $_POST['email'];
 $peran = $_POST['peran'];
 $password = $_POST['password']; 
 
+// Validasi domain email dan peran
+// if (($peran == 'mahasiswa' && !strpos($email, '@mahasiswa.upnvj.ac.id')) || 
+//     ($peran == 'dosen' && !strpos($email, '@dosen.upnvj.ac.id'))) {
+//     setcookie("message", "Email tidak valid untuk peran yang dipilih", time() + 60);
+//     header("location: index_register.php"); 
+//     exit();
+// }
+
 // Validasi domain email
-if (($peran == 'mahasiswa' && !strpos($email, '@mahasiswa.upnvj.ac.id')) || 
-    ($peran == 'dosen' && !strpos($email, '@dosen.upnvj.ac.id'))) {
+if ((!strpos($email, '@mahasiswa.upnvj.ac.id'))) {
     setcookie("message", "Email tidak valid untuk peran yang dipilih", time() + 60);
     header("location: index_register.php"); 
     exit();
 }
-
 // Memeriksa apakah data yang dibutuhkan telah diisi
-if ($nama != '' && $nim_nid != '' && $tahun_angkatan != '' && $email != '' && $peran != '' && $password != '') {
+if ($nama != '' && $nim_nid != '' && $tahun_angkatan != '' && $email != '' && $password != '') {
     // Membuat query SQL untuk memeriksa apakah ada pengguna dengan nama yang sama
     $sql = "SELECT * FROM users WHERE nama='$nama'";
     $query = mysqli_query($koneksi, $sql);
@@ -33,7 +39,7 @@ if ($nama != '' && $nim_nid != '' && $tahun_angkatan != '' && $email != '' && $p
         header("location: index_register.php"); 
     } else {
         // Jika tidak ada pengguna dengan nama yang sama, tambahkan pengguna ke dalam tabel users
-        $sql = "INSERT INTO users (nama, nim_nid, tahun_angkatan, email, peran, password) VALUES ('$nama', '$nim_nid', '$tahun_angkatan', '$email', '$peran', '$password')";
+        $sql = "INSERT INTO users (nama, nim_nid, tahun_angkatan, email, peran, password) VALUES ('$nama', '$nim_nid', '$tahun_angkatan', '$email', 'mahasiswa', '$password')";
         $query = mysqli_query($koneksi, $sql);
         
         // Memeriksa apakah pengguna berhasil ditambahkan

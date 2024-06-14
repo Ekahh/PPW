@@ -101,13 +101,13 @@
           class="box"
         /><!-- seharusnya ada required di sini -->
 
-        <div class="form-group">
+        <!-- <div class="form-group">
           <p>Peran <span>*</span></p>
           <select id="peran" name="peran" required class="box">
             <option value="mahasiswa">Mahasiswa</option>
             <option value="dosen">Dosen</option>
           </select>
-        </div>
+        </div> -->
         <!-- seharusnya ada required di sini -->
 
         <p>Password <span>*</span></p>

@@ -38,67 +38,53 @@
    <link rel="stylesheet" href="css/style.css">
 
 </head>
-<body>
+<body class="home-container">
 
-<!-- ini navbar dibiarkan saja -->
-<header class="header">
-      <section class="flex">
-        <a href="dashboard.php" class="logo">
-          <img src="images/upnvj.png" alt="Logo" /> Pekaem
-        </a>
+    <!-- Header -->
+    <header class="header">
+        <section class="flex">
+            <a href="dashboard.php" class="logo">
+                <img src="images/upnvj.png" alt="Logo" /> Pekaem
+            </a>
 
-        <form action="search.html" method="post" class="search-form">
-          <input
-            type="text"
-            name="search_box"
-            required
-            placeholder="search courses..."
-            maxlength="100"
-          />
-          <button type="submit" class="fas fa-search"></button>
-        </form>
+            <!-- Icons -->
+            <div class="icons">
+                <div id="menu-btn" class="fas fa-bars"></div>
+                <div id="search-btn" class="fas fa-search"></div>
+                <div id="user-btn" class="fas fa-user"></div>
+                <div id="toggle-btn" class="fas fa-sun"></div>
+            </div>
 
-        <div class="icons">
-          <div id="menu-btn" class="fas fa-bars"></div>
-          <div id="search-btn" class="fas fa-search"></div>
-          <div id="user-btn" class="fas fa-user"></div>
-          <div id="toggle-btn" class="fas fa-sun"></div>
+            <!-- Profile -->
+            <div class="profile">
+                <img src="images/pic-1.jpg" class="image" alt="" />
+                <h3 class="name"><?php echo $nama; ?></h3>
+                <p class="role"><?php echo $nim_nid; ?></p>
+                <a href="profile.html" class="btn">View Profile</a>
+                <div class="flex-btn">
+                    <a href="logout.php" class="option-btn">Logout</a>
+                </div>
+            </div>
+        </section>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="side-bar">
+        <div id="close-btn">
+            <i class="fas fa-times"></i>
         </div>
 
         <div class="profile">
-          <img src="images/pic-1.jpg" class="image" alt="" />
-          <h3 class="name"><?php echo $nama; ?></h3>
-          <p class="role"><?php echo $nim_nid; ?></p>
-          <a href="profile.html" class="btn">view profile</a>
-          <div class="flex-btn">
-            <a href="logout.php" class="option-btn">Logout</a>
-          </div>
+            <img src="images/pic-1.jpg" class="image" alt="" />
+            <h3 class="name"><?php echo $nama; ?></h3>
+            <p class="role"><?php echo $nim_nid; ?></p>
         </div>
-      </section>
-    </header>
 
-    <!-- ini sidebar dibiarkan saja -->
-    <div class="side-bar">
-      <div id="close-btn">
-        <i class="fas fa-times"></i>
-      </div>
-
-      <div class="profile">
-        <img src="images/pic-1.jpg" class="image" alt="" />
-        <h3 class="name"><?php echo $nama; ?></h3>
-        <p class="role"><?php echo $nim_nid; ?></p>
-        <!-- <a href="profile.html" class="btn">view profile</a> -->
-      </div>
-
-      <nav class="navbar">
-        <a href="dashboard.php"><i class="fas fa-home"></i><span>home</span></a>
-        <a href="teams.php"
-          ><i class="fas fa-graduation-cap"></i><span>Teams</span></a
-        >
-        <a href="teachers.html"
-          ><i class="fas fa-chalkboard-user"></i><span>teachers</span></a
-        >
-      </nav>
+        <nav class="navbar">
+            <a href="dashboard.php"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="teams.php"><i class="fas fa-graduation-cap"></i><span>Teams</span></a>
+            <a href="index_invitation.php"><i class="fas fa-chalkboard-user"></i><span>Invitation</span></a>
+        </nav>
     </div>
 
    <section class="form-container">
@@ -108,7 +94,7 @@
          <p>Judul</p>
          <input type="text" id="team_name" name="team_name" required placeholder="Masukkan Judul" maxlength="100" class="box">
          <p>Deskripsi</p>
-         <input type="text" id="desc" name="desc" required placeholder="Masukkan Deskripsi" maxlength="200" class="box">
+         <textarea id="desc" rows="4" cols="50" placeholder="Masukkan Deskripsi" name="desc" class="box"></textarea>
          <p>Jenis PKM<span></span></p>
          <select id="pkm_type" name="pkm_type" required class="box">
                <option value="PKM-K">PKM-K</option>

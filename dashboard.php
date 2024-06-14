@@ -26,6 +26,49 @@ $result_member_teams = mysqli_query($koneksi, $sql_member_teams);
 $sql_all_teams = "SELECT * FROM teams";
 $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
 
+// Mendapatkan daftar semua tim kecuali tim sendiri
+$sql_not_my_teams = "
+    SELECT * 
+    FROM teams 
+    WHERE team_id NOT IN (
+        SELECT team_id 
+        FROM members 
+        WHERE user_id = '$user_id'
+    ) 
+    AND leader_id != '$user_id'
+";
+$result_not_my_teams = mysqli_query($koneksi, $sql_not_my_teams);
+
+// Mendapatkan daftar undangan untuk pengguna saat ini
+$sql_requests = "
+    SELECT 
+        join_requests.join_id, 
+        users.user_id, 
+        users.nama, 
+        users.nim_nid, 
+        teams.team_id, 
+        teams.team_name, 
+        teams.member_now, 
+        teams.member_max
+    FROM 
+        join_requests 
+    JOIN 
+        teams 
+    ON 
+        join_requests.team_id = teams.team_id 
+    JOIN 
+        users 
+    ON 
+        join_requests.user_id = users.user_id 
+    WHERE 
+        teams.leader_id = '$user_id'
+";
+$result_requests = mysqli_query($koneksi, $sql_requests);
+
+// Mendapatkan daftar undangan untuk pengguna saat ini
+$sql_invitations = "SELECT invitations.invite_id, teams.team_id, teams.team_name, teams.member_now, teams.member_max, teams.description FROM invitations JOIN teams ON invitations.team_id = teams.team_id WHERE invitations.user_id = '$user_id'";
+$result_invitations = mysqli_query($koneksi, $sql_invitations);
+
 // Memeriksa apakah pengguna belum memiliki tim
 $has_team = (mysqli_num_rows($result_my_teams) > 0) || (mysqli_num_rows($result_member_teams) > 0);
 
@@ -33,12 +76,42 @@ $has_team = (mysqli_num_rows($result_my_teams) > 0) || (mysqli_num_rows($result_
 $search_query = isset($_POST['search_box']) ? $_POST['search_box'] : '';
 
 // Memodifikasi query berdasarkan input pencarian
+// if (!empty($search_query)) {
+//     $sql_all_teams = "SELECT * FROM teams WHERE team_name LIKE '%$search_query%' OR description LIKE '%$search_query%'";
+// } else {
+//     $sql_all_teams = "SELECT * FROM teams";
+// }
+// $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
+
+
+// Memodifikasi query berdasarkan input pencarian kecuali tim sendiri
 if (!empty($search_query)) {
-    $sql_all_teams = "SELECT * FROM teams WHERE team_name LIKE '%$search_query%' OR description LIKE '%$search_query%'";
+    $sql_not_my_teams = "
+        SELECT * 
+        FROM teams 
+        WHERE (team_name LIKE '%$search_query%' OR description LIKE '%$search_query%') 
+        AND team_id NOT IN (
+            SELECT team_id 
+            FROM members 
+            WHERE user_id = '$user_id'
+        ) 
+        AND leader_id != '$user_id'
+    ";
 } else {
-    $sql_all_teams = "SELECT * FROM teams";
+    $sql_not_my_teams = "
+        SELECT * 
+        FROM teams 
+        WHERE team_id NOT IN (
+            SELECT team_id 
+            FROM members 
+            WHERE user_id = '$user_id'
+        ) 
+        AND leader_id != '$user_id'
+    ";
 }
-$result_all_teams = mysqli_query($koneksi, $sql_all_teams);
+
+$result_not_my_teams = mysqli_query($koneksi, $sql_not_my_teams);
+
 
 ?>
 
@@ -56,7 +129,7 @@ $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
     <!-- Custom CSS file link -->
     <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body class= "home-container">
 
     <!-- Header -->
     <header class="header">
@@ -116,7 +189,7 @@ $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
         <h1 class="heading">Quick Options</h1>
 
         <div class="box-container">
-            <div class="box">
+            <!-- <div class="box">
                 <h3 class="title">Jenis PKM</h3>
                 <div class="flex">
                     <a href="#"><span>PKM-RE</span></a>
@@ -126,26 +199,44 @@ $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
                     <a href="#"><span>PKM-KC</span></a>
                     <a href="#"><span>PKM-AI</span></a>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="box">
-                <h3 class="title">Tahun Angkatan</h3>
-                <div class="flex">
-                    <a href="#"><span>2019</span></a>
-                    <a href="#"><span>2020</span></a>
-                    <a href="#"><span>2021</span></a>
-                    <a href="#"><span>2022</span></a>
-                    <a href="#"><span>2023</span></a>
-                </div>
-            </div>
+            <!-- Request Box -->
+            <?php
+            if (mysqli_num_rows($result_requests) > 0) {
+                echo "<div class='box'>";
+                echo "<h3 class='title'>Request List</h3>";
+                echo "<div class='flex'>";
+                echo "<a href='#'><span>" . mysqli_num_rows($result_requests) . "</span></a>";
+                echo "</div>";
+                // echo "<p class='tutor'>Jumlah Request = " . mysqli_num_rows($result_requests) . "</p>";
+                echo "<br><a href='index_request.php' class='inline-btn'>View List</a>";
+                echo "</div>";
+            }
+            ?>
 
+            <!-- Invitation Box -->
+            <?php
+            if (mysqli_num_rows($result_invitations) > 0) {
+                echo "<div class='box'>";
+                echo "<h3 class='title'>Invitation List</h3>";
+                echo "<div class='flex'>";
+                echo "<a href='#'><span>" . mysqli_num_rows($result_invitations) . "</span></a>";
+                echo "</div>";
+                // echo "<p class='tutor'>Jumlah Request = " . mysqli_num_rows($result_invitations) . "</p>";
+                echo "<br><a href='index_invitation.php' class='inline-btn'>View List</a>";
+                echo "</div>";
+            }
+            ?>
+
+            <!-- Create Team atau My Team box -->
             <?php
             if (mysqli_num_rows($result_my_teams) > 0) {
                 while ($row = mysqli_fetch_assoc($result_my_teams)) {
                     echo "<div class='box'>";
                     echo "<h3 class='title'>" . $row['team_name'] . "</h3>";
                     echo "<h3 class='tutor'>" . " [" . $row['member_now'] . "/" . $row['member_max'] . "]" .  "</h3>";
-                    echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>Manage Members</a>";
+                    echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>Manage Team</a>";
                     echo "</div>";
                 }
             } elseif (mysqli_num_rows($result_member_teams) > 0) {
@@ -154,7 +245,7 @@ $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
                     echo "<h3 class='title'>" . $row['team_name'] . " [" . $row['member_now'] . "/" . $row['member_max'] . "]" . "</h3>";
                     echo "<h3 class='tutor'>" . $row['description'] . "</h3>";
                     echo "<div class='box'>";
-                    echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Members</a>";
+                    echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Team</a>";
                     echo "</div>";
                     echo "</div>";
                 }
@@ -174,9 +265,8 @@ $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
         <h1 class="heading">Team List</h1>
         <div class="box-container">
             <?php
-            if (mysqli_num_rows($result_all_teams) > 0) {
-                while ($row = mysqli_fetch_assoc($result_all_teams)) {
-                    $is_leader = ($_SESSION['user_id'] == $row['leader_id']);
+            if (mysqli_num_rows($result_not_my_teams) > 0) {
+                while ($row = mysqli_fetch_assoc($result_not_my_teams)) {
                     echo "<div class='box'>";
                     echo "<div class='tutor'>";
                     echo "<div class='info'>";
@@ -188,11 +278,7 @@ $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
                     echo "<h3 class='title'>" . $row['description'] . "</h3>";
                     echo "</div>";
                     echo "</div>";
-                    if ($is_leader) {
-                        echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>Manage Members</a>";
-                    } else {
-                        echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Members</a>";
-                    }
+                    echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Team</a>";
                     echo "</div>";
                 }
             } else {
@@ -202,13 +288,14 @@ $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
             ?>
         </div>
         <?php
-        if (mysqli_num_rows($result_all_teams) === 1) {
+        
+        if (mysqli_num_rows($result_not_my_teams) === 1) {
             echo "<div class='more-btn'>";
-            // echo "<a href='teams.php' class='inline-option-btn'>view all teams</a>";
             echo "</div>";
         }
         ?>
     </section>
+
 
     <section class="courses">
         

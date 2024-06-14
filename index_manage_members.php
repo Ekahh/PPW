@@ -52,8 +52,16 @@ $sql_my_members = "SELECT * FROM users
 $result_my_members = mysqli_query($koneksi, $sql_my_members);
 
 $is_leader = ($_SESSION['user_id'] == $team['leader_id']);
-$is_in_team = ($_SESSION['user_id'] == $in_team['user_id']);
+$is_in_team = ($in_team && $_SESSION['user_id'] == $in_team['user_id']);
 $is_member = ($member && $_SESSION['user_id'] == $member['user_id']);
+
+// Ambil pesan undangan dari session (jika ada)
+$invite_message = isset($_SESSION['invite_message']) ? $_SESSION['invite_message'] : "";
+unset($_SESSION['invite_message']); // Hapus pesan dari session setelah ditampilkan
+
+// Ambil pesan permintaan bergabung dari session (jika ada)
+$join_message = isset($_SESSION['join_message']) ? $_SESSION['join_message'] : "";
+unset($_SESSION['join_message']); // Hapus pesan dari session setelah ditampilkan
 
 ?>
 
@@ -72,24 +80,15 @@ $is_member = ($member && $_SESSION['user_id'] == $member['user_id']);
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body class="home-container">
-    <!-- ini navbar dibiarkan saja -->
+
+    <!-- Header -->
     <header class="header">
         <section class="flex">
             <a href="dashboard.php" class="logo">
                 <img src="images/upnvj.png" alt="Logo" /> Pekaem
             </a>
 
-            <form action="search.html" method="post" class="search-form">
-                <input
-                    type="text"
-                    name="search_box"
-                    required
-                    placeholder="search courses..."
-                    maxlength="100"
-                />
-                <button type="submit" class="fas fa-search"></button>
-            </form>
-
+            <!-- Icons -->
             <div class="icons">
                 <div id="menu-btn" class="fas fa-bars"></div>
                 <div id="search-btn" class="fas fa-search"></div>
@@ -97,11 +96,12 @@ $is_member = ($member && $_SESSION['user_id'] == $member['user_id']);
                 <div id="toggle-btn" class="fas fa-sun"></div>
             </div>
 
+            <!-- Profile -->
             <div class="profile">
                 <img src="images/pic-1.jpg" class="image" alt="" />
                 <h3 class="name"><?php echo $nama; ?></h3>
                 <p class="role"><?php echo $nim_nid; ?></p>
-                <a href="profile.html" class="btn">view profile</a>
+                <a href="profile.html" class="btn">View Profile</a>
                 <div class="flex-btn">
                     <a href="logout.php" class="option-btn">Logout</a>
                 </div>
@@ -109,7 +109,7 @@ $is_member = ($member && $_SESSION['user_id'] == $member['user_id']);
         </section>
     </header>
 
-    <!-- ini sidebar dibiarkan saja -->
+    <!-- Sidebar -->
     <div class="side-bar">
         <div id="close-btn">
             <i class="fas fa-times"></i>
@@ -119,17 +119,12 @@ $is_member = ($member && $_SESSION['user_id'] == $member['user_id']);
             <img src="images/pic-1.jpg" class="image" alt="" />
             <h3 class="name"><?php echo $nama; ?></h3>
             <p class="role"><?php echo $nim_nid; ?></p>
-            <!-- <a href="profile.html" class="btn">view profile</a> -->
         </div>
 
         <nav class="navbar">
-            <a href="dashboard.php"><i class="fas fa-home"></i><span>home</span></a>
-            <a href="teams.php"
-                ><i class="fas fa-graduation-cap"></i><span>Teams</span></a
-            >
-            <a href="teachers.html"
-                ><i class="fas fa-chalkboard-user"></i><span>teachers</span></a
-            >
+            <a href="dashboard.php"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="teams.php"><i class="fas fa-graduation-cap"></i><span>Teams</span></a>
+            <a href="index_invitation.php"><i class="fas fa-chalkboard-user"></i><span>Invitation</span></a>
         </nav>
     </div>
 
@@ -149,15 +144,15 @@ $is_member = ($member && $_SESSION['user_id'] == $member['user_id']);
                       // Perbarui bagian HTML yang relevan untuk menambahkan tautan "Leave Team"
                       if ($is_leader) {
                           echo '<a href="index_update_team.php?team_id=' . $team['team_id'] . '" class="inline-btn" style="margin-right: 10px;">Update</a>';
-                          echo '<a class="inline-delete-btn" onclick="togglePopup()" style="margin-right: 10px;">Delete</a>';
+                          echo '<a class="inline-delete-btn" onclick="togglePopupDelete()" style="margin-right: 10px;">Delete</a>';
                           echo '<a href="index_invite_member.php?team_id=' . $team_id . '" class="inline-option-btn" style="margin-right: 10px;">Invite</a>';
+                          echo '<a href="index_request.php" class="inline-option-btn" style="margin-right: 10px;">Join Requests</a>';
                       } else if ($is_member) {
                           echo '<a href="leave_team.php?team_id=' . $team_id . '" class="inline-delete-btn">Leave Team</a>';
                       } else if ($is_in_team) {
-                         echo '';
-                      }
-                      else {
-                          echo '<a href="#" class="inline-btn">Request to join team</a>';
+                          echo '<span class="inline-btn disabled">Already in a team</span>';
+                      } else {
+                          echo '<a name="request_join" href="request_join.php?team_id=' . $team_id . '" class="inline-btn">Request to join team</a>';
                       }
                     ?>
                 </div>
@@ -213,29 +208,60 @@ $is_member = ($member && $_SESSION['user_id'] == $member['user_id']);
                 </table>
             </div>
         </div>
-    </section>
+        <!-- Tampilkan popup jika ada pesan undangan -->
+        <?php if (!empty($invite_message) || !empty($join_message)): ?>
+        <div class="popup" id="popup-join" style="display: block;">
+            <div class="overlay"></div>
+            <div class="content">
+                <div class="close-btn-popup" onclick="togglePopupjoin()">&times;</div>
+                <h1 class="heading">Status</h1>
+                <p><?php echo !empty($invite_message) ? $invite_message : $join_message; ?></p>
+            </div>
+        </div>
+        <?php endif; ?>
 
-    <!-- Pop Up -->
-    <div class="popup" id="popup-1">
+        <!-- Pop Up untuk delete -->
+        <div class="popup" id="popup-delete">
         <div class="overlay"></div>
         <div class="content">
-            <div class="close-btn-popup" onclick="togglePopup()">&times;</div>
+            <div class="close-btn-popup" onclick="togglePopupDelete()">&times;</div>
             <h1 class="heading">Delete Team</h1>
             <p>Apakah kamu yakin ingin menghapus kelompok?</p>
             <div class="btn-group">
-                <form action="delete_team.php" method="post" >
+                <form action="delete_team.php" method="post">
                     <input type="hidden" name="team_id" value="<?php echo $team['team_id']; ?>">
-                    <button type="submit" class="delete-btn" name="delete">Iya</button>
+                    <button type="submit" class="btn" name="delete">Iya</button>
                 </form>
                 <form method="post">
-                    <a href="#" class="btn" onclick="togglePopup()">Tidak</a>
+                    <a href="#" class="btn" onclick="togglePopupDelete()">Tidak</a>
                 </form>
             </div>
         </div>
-    </div>
+
+    </section>
 
     <!-- custom js file link  -->
     <script src="js/script.js"></script>
+
+    <!-- script popup -->
+    <script>
+        <?php if (!empty($invite_message)): ?>
+        document.addEventListener('DOMContentLoaded', function () {
+            var popup = document.getElementById("popup-join");
+            popup.style.display = "block";
+        });
+        <?php endif; ?>
+
+        function togglePopupjoin() {
+            var popup = document.getElementById("popup-join");
+            popup.style.display = "none";
+        }
+
+        function togglePopupDelete() {
+            var popup = document.getElementById("popup-delete");
+            popup.classList.toggle("show");
+        }
+    </script>
 </body>
 </html>
 <?php

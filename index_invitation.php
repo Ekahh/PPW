@@ -32,55 +32,54 @@ $result_invitations = mysqli_query($koneksi, $sql_invitations);
     <!-- custom css file link  -->
     <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body class="home-container">
 
-<header class="header">
-    <section class="flex">
-        <a href="dashboard.php" class="logo">
-            <img src="images/upnvj.png" alt="Logo" /> Pekaem
-        </a>
+    <!-- Header -->
+    <header class="header">
+        <section class="flex">
+            <a href="dashboard.php" class="logo">
+                <img src="images/upnvj.png" alt="Logo" /> Pekaem
+            </a>
 
-        <form action="search.html" method="post" class="search-form">
-            <input type="text" name="search_box" required placeholder="search courses..." maxlength="100" />
-            <button type="submit" class="fas fa-search"></button>
-        </form>
+            <!-- Icons -->
+            <div class="icons">
+                <div id="menu-btn" class="fas fa-bars"></div>
+                <div id="search-btn" class="fas fa-search"></div>
+                <div id="user-btn" class="fas fa-user"></div>
+                <div id="toggle-btn" class="fas fa-sun"></div>
+            </div>
 
-        <div class="icons">
-            <div id="menu-btn" class="fas fa-bars"></div>
-            <div id="search-btn" class="fas fa-search"></div>
-            <div id="user-btn" class="fas fa-user"></div>
-            <div id="toggle-btn" class="fas fa-sun"></div>
+            <!-- Profile -->
+            <div class="profile">
+                <img src="images/pic-1.jpg" class="image" alt="" />
+                <h3 class="name"><?php echo $nama; ?></h3>
+                <p class="role"><?php echo $nim_nid; ?></p>
+                <a href="profile.html" class="btn">View Profile</a>
+                <div class="flex-btn">
+                    <a href="logout.php" class="option-btn">Logout</a>
+                </div>
+            </div>
+        </section>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="side-bar">
+        <div id="close-btn">
+            <i class="fas fa-times"></i>
         </div>
 
         <div class="profile">
             <img src="images/pic-1.jpg" class="image" alt="" />
             <h3 class="name"><?php echo $nama; ?></h3>
             <p class="role"><?php echo $nim_nid; ?></p>
-            <a href="profile.html" class="btn">view profile</a>
-            <div class="flex-btn">
-                <a href="logout.php" class="option-btn">Logout</a>
-            </div>
         </div>
-    </section>
-</header>
 
-<div class="side-bar">
-    <div id="close-btn">
-        <i class="fas fa-times"></i>
+        <nav class="navbar">
+            <a href="dashboard.php"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="teams.php"><i class="fas fa-graduation-cap"></i><span>Teams</span></a>
+            <a href="index_invitation.php"><i class="fas fa-chalkboard-user"></i><span>Invitation</span></a>
+        </nav>
     </div>
-
-    <div class="profile">
-        <img src="images/pic-1.jpg" class="image" alt="" />
-        <h3 class="name"><?php echo $nama; ?></h3>
-        <p class="role"><?php echo $nim_nid; ?></p>
-    </div>
-
-    <nav class="navbar">
-        <a href="dashboard.php"><i class="fas fa-home"></i><span>home</span></a>
-        <a href="teams.php"><i class="fas fa-graduation-cap"></i><span>Teams</span></a>
-        <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>teachers</span></a>
-    </nav>
-</div>
 
 <section class="courses">
     <h1 class="heading">Invitations</h1>
@@ -104,7 +103,7 @@ $result_invitations = mysqli_query($koneksi, $sql_invitations);
                 echo "<td style='width: 30%; text-align: right;'>";
                 echo "<a href='accept_invite.php?invite_id=" . $row['invite_id'] . "' class='inline-btn'>Accept Invitation</a>";
                 echo "<a href='decline_invite.php?invite_id=" . $row['invite_id'] . "' class='inline-btn'>Decline Invitation</a>";
-                echo "<a href='view_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Members</a>";
+                echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Members</a>";
                 echo "</td>";
                 echo "</tr>";
                 echo "</table>";
