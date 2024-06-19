@@ -252,7 +252,7 @@ $is_invited = mysqli_fetch_assoc($result_invitations);
             <div class="btn-group">
                 <form action="delete_team.php" method="post">
                     <input type="hidden" name="team_id" value="<?php echo $team['team_id']; ?>">
-                    <button type="submit" class="delete-btn" name="delete">Iya</button>
+                    <button type="submit" class="btn" name="delete">Iya</button>
                 </form>
                 <form method="post">
                     <a href="#" class="btn" onclick="togglePopupDelete()">Tidak</a>

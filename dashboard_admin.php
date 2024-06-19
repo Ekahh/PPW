@@ -26,6 +26,10 @@ $result_member_teams = mysqli_query($koneksi, $sql_member_teams);
 $sql_all_teams = "SELECT * FROM teams";
 $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
 
+// Mendapatkan daftar semua tim
+$sql_unapproved_teams = "SELECT * FROM teams WHERE status = 'Not Approved'";
+$result_unapproved_teams = mysqli_query($koneksi, $sql_unapproved_teams);
+
 // Memeriksa apakah pengguna belum memiliki tim
 $has_team = (mysqli_num_rows($result_my_teams) > 0) || (mysqli_num_rows($result_member_teams) > 0);
 
@@ -117,29 +121,64 @@ $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
       </nav>
     </div>
 
-    <section class="courses">
+    <section class="playlist-videos">
+        <h1 class="heading">Team Members</h1>
+
+        <div class="box-container">
+            <div class="box">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style='width: 15%;'>Jenis PKM</th>
+                            <th style='width: 40%;'>Judul</th>
+                            <th style='width: 25%;'>Nama Ketua</th>
+                            <th style=' width: 20%;'>Manage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (mysqli_num_rows($result_unapproved_teams) > 0) {
+                            while ($row = mysqli_fetch_assoc($result_unapproved_teams)) {
+                                echo "<tr style='height: 70px;'>";
+                                echo "<td>" . $row['pkm_type'] . "</td>";
+                                echo "<td>" . $row['team_name'] . "</td>";
+                                echo "<td>" . "Nama Ketua" . "</td>";
+
+                                echo "<td style='width: 15%;'>";
+                                // echo "<a href='delete_member.php?team_id={$team_id}&member_id={$my_member['user_id']}' class='inline-delete-btn inline-delete-btn'>Hapus</a><br>";
+                                echo "</td>";
+
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='5'>No Teams found.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- <section class="courses">
         <h1 class="heading">Team List</h1>
         <div class="box-container">
             <?php
-            if (mysqli_num_rows($result_all_teams) > 0) {
-                while ($row = mysqli_fetch_assoc($result_all_teams)) {
-                    $is_leader = ($_SESSION['user_id'] == $row['leader_id']);
+            if (mysqli_num_rows($result_unapproved_teams) > 0) {
+                while ($row = mysqli_fetch_assoc($result_unapproved_teams)) {
                     echo "<div class='box'>";
                     echo "<div class='tutor'>";
                     echo "<div class='info'>";
-                    echo "<span>" . $row['pkm_type'] . "</span>";
+                    echo "<h3>" . $row['pkm_type'] . "</h3>";
                     echo "<h3>" . $row['team_name'] . "</h3>";
                     echo "<span>" . $row['member_now'] . "/" . $row['member_max'] . "</span>";
                     echo "<br>";
                     echo "<br>";
-                    echo "<h4 class='title'>" . $row['description'] . "</h4>";
+                    echo "<h3 class='title'>" . $row['description'] . "</h3>";
                     echo "</div>";
                     echo "</div>";
-                    if ($is_leader) {
-                        echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>Manage Members</a>";
-                    } else {
-                        echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Members</a>";
-                    }
+                    echo "<a href='index_admin_team_detail.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Detail</a>";
                     echo "</div>";
                 }
             } else {
@@ -149,13 +188,12 @@ $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
             ?>
         </div>
         <?php
-        if (mysqli_num_rows($result_all_teams) === 1) {
+        if (mysqli_num_rows($result_unapproved_teams) === 1) {
             echo "<div class='more-btn'>";
-            // echo "<a href='teams.php' class='inline-option-btn'>view all teams</a>";
             echo "</div>";
         }
         ?>
-    </section>
+    </section> -->
 
     <!-- custom js file link  -->
     <script src="js/script.js"></script>

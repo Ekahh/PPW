@@ -38,7 +38,7 @@ $result_invitations = mysqli_query($koneksi, $sql_invitations);
     <header class="header">
         <section class="flex">
             <a href="dashboard.php" class="logo">
-                <img src="images/upnvj.png" alt="Logo" /> Pekaem
+                <img src="images/upnvj.png" alt="Logo" /> PKM
             </a>
 
             <!-- Icons -->
@@ -54,7 +54,7 @@ $result_invitations = mysqli_query($koneksi, $sql_invitations);
                 <img src="images/pic-1.jpg" class="image" alt="" />
                 <h3 class="name"><?php echo $nama; ?></h3>
                 <p class="role"><?php echo $nim_nid; ?></p>
-                <a href="profile.html" class="btn">View Profile</a>
+                <!-- <a href="profile.html" class="btn">View Profile</a> -->
                 <div class="flex-btn">
                     <a href="logout.php" class="option-btn">Logout</a>
                 </div>

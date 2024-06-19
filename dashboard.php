@@ -89,7 +89,7 @@ if (!empty($search_query)) {
     $sql_not_my_teams = "
         SELECT * 
         FROM teams 
-        WHERE (team_name LIKE '%$search_query%' OR description LIKE '%$search_query%') 
+        WHERE (team_name LIKE '%$search_query%' OR description LIKE '%$search_query%' OR pkm_type LIKE '%$search_query%') 
         AND team_id NOT IN (
             SELECT team_id 
             FROM members 
@@ -135,7 +135,7 @@ $result_not_my_teams = mysqli_query($koneksi, $sql_not_my_teams);
     <header class="header">
         <section class="flex">
             <a href="dashboard.php" class="logo">
-                <img src="images/upnvj.png" alt="Logo" /> Pekaem
+                <img src="images/upnvj.png" alt="Logo" /> PKM
             </a>
 
             <!-- Search Form -->
@@ -157,7 +157,7 @@ $result_not_my_teams = mysqli_query($koneksi, $sql_not_my_teams);
                 <img src="images/pic-1.jpg" class="image" alt="" />
                 <h3 class="name"><?php echo $nama; ?></h3>
                 <p class="role"><?php echo $nim_nid; ?></p>
-                <a href="profile.html" class="btn">View Profile</a>
+                <!-- <a href="profile.html" class="btn">View Profile</a> -->
                 <div class="flex-btn">
                     <a href="logout.php" class="option-btn">Logout</a>
                 </div>
@@ -180,7 +180,7 @@ $result_not_my_teams = mysqli_query($koneksi, $sql_not_my_teams);
         <nav class="navbar">
             <a href="dashboard.php"><i class="fas fa-home"></i><span>Home</span></a>
             <a href="teams.php"><i class="fas fa-graduation-cap"></i><span>Teams</span></a>
-            <a href="index_invitation.php"><i class="fas fa-chalkboard-user"></i><span>Invitation</span></a>
+            <a href="index_invitation.php"><i class="fas fa-person-circle-plus"></i><span>Invitation</span></a>
         </nav>
     </div>
 
@@ -270,12 +270,12 @@ $result_not_my_teams = mysqli_query($koneksi, $sql_not_my_teams);
                     echo "<div class='box'>";
                     echo "<div class='tutor'>";
                     echo "<div class='info'>";
-                    echo "<h3>" . $row['pkm_type'] . "</h3>";
+                    echo "<span>" . $row['pkm_type'] . "</span>";
                     echo "<h3>" . $row['team_name'] . "</h3>";
                     echo "<span>" . $row['member_now'] . "/" . $row['member_max'] . "</span>";
                     echo "<br>";
                     echo "<br>";
-                    echo "<h3 class='title'>" . $row['description'] . "</h3>";
+                    echo "<h4 class='title'>" . $row['description'] . "</h4>";
                     echo "</div>";
                     echo "</div>";
                     echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Team</a>";

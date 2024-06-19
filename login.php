@@ -38,15 +38,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // Memeriksa apakah permintaan adala
             $_SESSION['nim_nid'] = $nim_nid;
             $_SESSION['tahun_angkatan'] = $tahun;
             $_SESSION['peran'] = $peran;
-            header("Location: dashboard.php"); // Mengarahkan pengguna ke halaman dashboard jika berhasil login
+            
+            // Mengarahkan pengguna ke halaman dashboard sesuai peran
+            if ($peran == 'admin') {
+                header("Location: dashboard_admin.php");
+            } else {
+                header("Location: dashboard.php");
+            }
             exit();
         } else {
-            echo "Login failed!"; // Menampilkan pesan kesalahan jika password tidak sesuai
+            $_SESSION['message'] = "Password Tidak Sesuai"; // Menyimpan pesan kesalahan ke dalam sesi jika password tidak sesuai
+            header("Location: index_login.php");
         }
     } else {
-        echo "Login failed!"; // Menampilkan pesan kesalahan jika email atau NIM tidak ditemukan
+        $_SESSION['message'] = "User Tidak Ditemukan"; // Menyimpan pesan kesalahan ke dalam sesi jika email atau NIM tidak ditemukan
+        header("Location: index_login.php");
     }
-    
 } else {
     header("Location: index_login.php"); // Mengarahkan kembali ke halaman login jika tidak ada permintaan POST
 }

@@ -58,6 +58,7 @@ body.dark {
 }
 
 .home-container {
+  position: relative;
   transition: padding-left 0.3s ease; /* Tambahkan baris ini */
 }
 
@@ -554,7 +555,7 @@ section {
   background-color: var(--white);
   padding: 2rem;
   /* height: 46ch; */
-  max-height: 46ch;
+  /* max-height: 100ch; */
 }
 
 .courses .box-container .tutor-find {
@@ -571,7 +572,7 @@ section {
   margin-bottom: 2.5rem;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3; 
+  -webkit-line-clamp: 3;
 }
 
 .courses .box-container .box .tutor {
@@ -596,6 +597,12 @@ section {
 
 .courses .box-container .box .tutor h3 {
   font-size: 1.8rem;
+  color: var(--black);
+  margin-bottom: 0.2rem;
+}
+
+.courses .box-container .box .tutor h4 {
+  font-size: 1.3rem;
   color: var(--black);
   margin-bottom: 0.2rem;
 }
@@ -638,10 +645,10 @@ section {
   color: var(--black);
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3; /* Jumlah baris maksimum */
+  -webkit-line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 1000ch; /* Batas karakter per baris */
+  max-width: 1000ch; 
 }
 
 .courses .more-btn {
@@ -1594,4 +1601,86 @@ select option {
 
 .popup .content .btn-group a.btn:nth-child(2) {
   background-color: var(--red);
+}
+
+.courses {
+  position: relative;
+  padding-top: 5rem; /* Tambahkan padding atas untuk memberi ruang bagi tombol */
+}
+
+.playlist-details {
+  position: relative;
+  padding-top: 5rem; /* Tambahkan padding atas untuk memberi ruang bagi tombol */
+}
+
+.form-container {
+  position: relative;
+  padding-top: 5rem; /* Tambahkan padding atas untuk memberi ruang bagi tombol */
+}
+
+.btn-back {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 1.4rem;
+  background-color: var(--orange);
+  color: var(--white);
+  border-radius: 0.5rem;
+  position: absolute;
+  top: 1.25rem;
+  left: 2rem;
+  z-index: 1;
+}
+
+.btn-back:hover {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.courses .box-container-table .box table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Nunito", sans-serif;
+  border: var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.courses .box-container-table .box table th,
+.courses .box-container-table .box table td {
+  font-family: "Nunito", sans-serif;
+  font-size: 1.8rem;
+  color: var(--black);
+  text-align: center; /* Mengatur teks menjadi rata tengah */
+  vertical-align: middle; /* Mengatur teks menjadi vertikal tengah */
+  padding: 1rem; /* Menambahkan padding 1rem (16px) */
+}
+
+.courses .box-container-table .box table th {
+  background-color: var(--main-color);
+  color: var(--white);
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.courses .box-container-table .box table tbody tr:nth-child(even) {
+  background-color: var(--light-bg);
+}
+
+.courses .box-container-table .box {
+  border-radius: 0.5rem;
+  background-color: var(--white);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.courses .box-container-table .box table .btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.courses .box-container-table .box table .btn-container .inline-btn {
+  margin-bottom: 0.5rem;
 }

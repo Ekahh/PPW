@@ -30,22 +30,31 @@ if ($result_my_teams && mysqli_num_rows($result_my_teams) > 0) {
 $invite_message = isset($_SESSION['invite_message']) ? $_SESSION['invite_message'] : "";
 unset($_SESSION['invite_message']); // Hapus pesan dari session setelah ditampilkan
 
-// Mendapatkan daftar mahasiswa yang belum memiliki tim
+// Mendapatkan daftar mahasiswa yang belum memiliki tim dan belum diundang oleh user (ketua) dalam sesi ini
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search_box'])) {
     $search_query = $_POST['search_box'];
     $sql_all_students = "SELECT * FROM users 
                          WHERE peran = 'mahasiswa' 
                          AND user_id != '$user_id'
                          AND user_id NOT IN (SELECT user_id FROM members)
+                         AND user_id NOT IN (SELECT user_id FROM invitations WHERE team_id = '$team_id')
                          AND (nama LIKE '%$search_query%' OR nim_nid LIKE '%$search_query%')";
 } else {
     $sql_all_students = "SELECT * FROM users 
                          WHERE peran = 'mahasiswa' 
                          AND user_id != '$user_id'
-                         AND user_id NOT IN (SELECT user_id FROM members)";
+                         AND user_id NOT IN (SELECT user_id FROM members)
+                         AND user_id NOT IN (SELECT user_id FROM invitations WHERE team_id = '$team_id')";
 }
 
 $result_all_students = mysqli_query($koneksi, $sql_all_students);
+
+// Mendapatkan daftar mahasiswa yang sudah diundang oleh user (ketua) dalam sesi ini
+$sql_invited_students = "SELECT users.*, invitations.invite_id FROM users 
+                         JOIN invitations ON users.user_id = invitations.user_id 
+                         WHERE invitations.team_id = '$team_id'";
+$result_invited_students = mysqli_query($koneksi, $sql_invited_students);
+
 ?>
 
 <!DOCTYPE html>
@@ -71,12 +80,12 @@ $result_all_students = mysqli_query($koneksi, $sql_all_students);
     <header class="header">
         <section class="flex">
             <a href="dashboard.php" class="logo">
-                <img src="images/upnvj.png" alt="Logo" /> Pekaem
+                <img src="images/upnvj.png" alt="Logo" /> PKM
             </a>
 
             <!-- Search Form -->
             <form action="index_invite_member.php" method="post" class="search-form">
-                <input type="text" name="search_box" required placeholder="search students..." maxlength="100" />
+                <input type="text" name="search_box" placeholder="search students..." maxlength="100" />
                 <button type="submit" class="fas fa-search"></button>
             </form>
 
@@ -93,7 +102,7 @@ $result_all_students = mysqli_query($koneksi, $sql_all_students);
                 <img src="images/pic-1.jpg" class="image" alt="" />
                 <h3 class="name"><?php echo $nama; ?></h3>
                 <p class="role"><?php echo $nim_nid; ?></p>
-                <a href="profile.html" class="btn">view profile</a>
+                <!-- <a href="profile.html" class="btn">view profile</a> -->
                 <div class="flex-btn">
                     <a href="logout.php" class="option-btn">Logout</a>
                 </div>
@@ -125,20 +134,53 @@ $result_all_students = mysqli_query($koneksi, $sql_all_students);
     <!-- Content -->
     <section class="playlist-videos">
         <h1 class="heading">
-            Student List
+            Invited Student List
         </h1>
 
-        <!-- Tampilkan popup jika ada pesan undangan -->
-        <?php if (!empty($invite_message)): ?>
-        <div class="popup" id="popup-1" style="display: block;">
-            <div class="overlay"></div>
-            <div class="content">
-                <div class="close-btn-popup" onclick="togglePopup()">&times;</div>
-                <h1 class="heading">Invite Status</h1>
-                <p><?php echo $invite_message; ?></p>
+        <div class="box-container">
+            <div class="box">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>NIM</th>
+                            <th>Nama</th>
+                            <th>Angkatan</th>
+                            <th>Manage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (mysqli_num_rows($result_invited_students) > 0) {
+                            while ($row = mysqli_fetch_assoc($result_invited_students)) {
+                                echo "<tr>";
+                                echo "<td style='width: 20%;'>" . $row['nim_nid'] . "</td>";
+                                echo "<td style='width: 40%;'>" . $row['nama'] . "</td>";
+                                echo "<td style='width: 20%;'>" . $row['tahun_angkatan'] . "</td>";
+                                echo "<td style='width: 20%;'>";
+                                echo "<form method='post' action='cancel_invite.php'>";
+                                echo "<input type='hidden' name='invite_id' value='" . $row['invite_id'] . "'>"; 
+                                echo "<input type='hidden' name='team_id' value='" . $team_id . "'>"; 
+                                echo "<input type='hidden' name='user_id' value='" . $row['user_id'] . "'>";
+                                echo "<button type='submit' name='cancel-invite' class='inline-delete-btn'>Cancel Invite</button>";
+                                echo "</form>";
+                                echo "</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='4'>No students found.</td></tr>";
+                        }
+                        
+                        ?>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <?php endif; ?>
+    </section>
+
+    <section class="playlist-videos">
+        <h1 class="heading">
+            Student List
+        </h1>
 
         <div class="box-container">
             <div class="box">
@@ -156,10 +198,10 @@ $result_all_students = mysqli_query($koneksi, $sql_all_students);
                         if (mysqli_num_rows($result_all_students) > 0) {
                             while ($row = mysqli_fetch_assoc($result_all_students)) {
                                 echo "<tr>";
-                                echo "<td>" . $row['nim_nid'] . "</td>";
-                                echo "<td>" . $row['nama'] . "</td>";
-                                echo "<td>" . $row['tahun_angkatan'] . "</td>";
-                                echo "<td>";
+                                echo "<td style='width: 20%;'>" . $row['nim_nid'] . "</td>";
+                                echo "<td style='width: 40%;'>" . $row['nama'] . "</td>";
+                                echo "<td style='width: 20%;'>" . $row['tahun_angkatan'] . "</td>";
+                                echo "<td style='width: 20%;'>";
                                 echo "<form method='post' action='invite_member.php'>";
                                 echo "<input type='hidden' name='team_id' value='" . $team_id . "'>"; 
                                 echo "<input type='hidden' name='user_id' value='" . $row['user_id'] . "'>";
@@ -178,6 +220,21 @@ $result_all_students = mysqli_query($koneksi, $sql_all_students);
         </div>
     </section>
 
+    <section class="playlist-videos">
+            
+        <!-- Tampilkan popup jika ada pesan undangan -->
+        <?php if (!empty($invite_message)): ?>
+        <div class="popup" id="popup-1" style="display: block;">
+            <div class="overlay"></div>
+            <div class="content">
+                <div class="close-btn-popup" onclick="togglePopup()">&times;</div>
+                <h1 class="heading">Invite Status</h1>
+                <p><?php echo $invite_message; ?></p>
+            </div>
+        </div>
+        <?php endif; ?>
+    </section>
+    
     <!-- Custom JavaScript -->
     <script src="js/script.js"></script>
     <script>

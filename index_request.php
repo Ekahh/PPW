@@ -65,7 +65,7 @@ if ($result_requests === false) {
 <header class="header">
     <section class="flex">
         <a href="dashboard.php" class="logo">
-            <img src="images/upnvj.png" alt="Logo" /> Pekaem
+            <img src="images/upnvj.png" alt="Logo" /> PKM
         </a>
 
         <form action="search.html" method="post" class="search-form">
@@ -84,7 +84,7 @@ if ($result_requests === false) {
             <img src="images/pic-1.jpg" class="image" alt="" />
             <h3 class="name"><?php echo $nama; ?></h3>
             <p class="role"><?php echo $nim_nid; ?></p>
-            <a href="profile.html" class="btn">view profile</a>
+            <!-- <a href="profile.html" class="btn">view profile</a> -->
             <div class="flex-btn">
                 <a href="logout.php" class="option-btn">Logout</a>
             </div>
@@ -143,8 +143,16 @@ if ($result_requests === false) {
         } else {
             echo "<h1 class='heading'>No requests found.</h1>";
         }
-      ?>
+        echo "<div class='more-btn'>";
+        ?>
     </div>
+    <?php
+    if (mysqli_num_rows($result_requests) === 1) {
+        echo "<div class='more-btn'>";
+        // echo "<a href='teams.php' class='inline-option-btn'>view all teams</a>";
+        echo "</div>";
+    }
+    ?>
 </section>
 
 <!-- Custom JavaScript -->
