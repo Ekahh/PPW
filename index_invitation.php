@@ -81,43 +81,40 @@ $result_invitations = mysqli_query($koneksi, $sql_invitations);
         </nav>
     </div>
 
-<section class="courses">
-    <h1 class="heading">Invitations</h1>
+    <section class="courses">
+        <h1 class="heading">Invitations</h1>
+        <div class="box-container">
+            <?php if (mysqli_num_rows($result_invitations) > 0): ?>
+                <?php while ($row = mysqli_fetch_assoc($result_invitations)): ?>
+                    <div class='box'>
+                        <table style='width: 100%;'>
+                            <tr>
+                                <td style='width: 70%;'>
+                                    <div class='tutor'>
+                                        <div class='info'>
+                                            <h3><?php echo $row['team_name']; ?></h3>
+                                            <span><?php echo $row['member_now'] . "/" . $row['member_max']; ?></span>
+                                            <h3 class='title'><?php echo $row['description']; ?></h3>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style='width: 30%; text-align: right;'>
+                                    <a href='accept_invite.php?invite_id=<?php echo $row['invite_id']; ?>' class='inline-btn'>Accept Invitation</a>
+                                    <a href='decline_invite.php?invite_id=<?php echo $row['invite_id']; ?>' class='inline-btn'>Decline Invitation</a>
+                                    <a href='index_manage_members.php?team_id=<?php echo $row['team_id']; ?>' class='inline-btn'>View Members</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <h1 class='heading'>No invitations found.</h1>
+            <?php endif; ?>
+        </div>
+    </section>
 
-    <div class="box-container">
-        <?php
-          if (mysqli_num_rows($result_invitations) > 0) {
-            while ($row = mysqli_fetch_assoc($result_invitations)) {
-                echo "<div class='box'>";
-                echo "<table style='width: 100%;'>";
-                echo "<tr>";
-                echo "<td style='width: 70%;'>";
-                echo "<div class='tutor'>";
-                echo "<div class='info'>";
-                echo "<h3>" . $row['team_name'] . "</h3>";
-                echo "<span>" . $row['member_now'] . "/" . $row['member_max'] . "</span>";
-                echo "<h3 class='title'>" . $row['description'] . "</h3>";
-                echo "</div>";
-                echo "</div>";
-                echo "</td>";
-                echo "<td style='width: 30%; text-align: right;'>";
-                echo "<a href='accept_invite.php?invite_id=" . $row['invite_id'] . "' class='inline-btn'>Accept Invitation</a>";
-                echo "<a href='decline_invite.php?invite_id=" . $row['invite_id'] . "' class='inline-btn'>Decline Invitation</a>";
-                echo "<a href='index_manage_members.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Members</a>";
-                echo "</td>";
-                echo "</tr>";
-                echo "</table>";
-                echo "</div>";
-            }
-        } else {
-            echo "<h1 class='heading'>No invitations found.</h1>";
-        }
-      ?>
-    </div>
-</section>
-
-<!-- Custom JavaScript -->
-<script src="js/script.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="js/script.js"></script>
 
 </body>
 </html>

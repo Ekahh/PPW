@@ -27,7 +27,7 @@ $sql_all_teams = "SELECT * FROM teams";
 $result_all_teams = mysqli_query($koneksi, $sql_all_teams);
 
 // Mendapatkan daftar semua tim
-$sql_unapproved_teams = "SELECT * FROM teams WHERE status = 'Not Approved'";
+$sql_unapproved_teams = "SELECT * FROM teams WHERE status = 'unset'";
 $result_unapproved_teams = mysqli_query($koneksi, $sql_unapproved_teams);
 
 // Memeriksa apakah pengguna belum memiliki tim
@@ -38,164 +38,104 @@ $search_query = isset($_POST['search_box']) ? $_POST['search_box'] : '';
 
 // Memodifikasi query berdasarkan input pencarian
 if (!empty($search_query)) {
-    $sql_all_teams = "SELECT * FROM teams WHERE team_name LIKE '%$search_query%' OR description LIKE '%$search_query%'";
+    $sql_unapproved_teams = "SELECT * FROM teams WHERE status = 'unset' AND team_name LIKE '%$search_query%' OR description LIKE '%$search_query%'";
 } else {
-    $sql_all_teams = "SELECT * FROM teams";
+    $sql_unapproved_teams = "SELECT * FROM teams WHERE status = 'unset'";
 }
-$result_all_teams = mysqli_query($koneksi, $sql_all_teams);
+$result_unapproved_teams = mysqli_query($koneksi, $sql_unapproved_teams);
 
 ?>
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>courses</title>
+    <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>courses</title>
 
-    <!-- font awesome cdn link  -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
-    />
+      <!-- font awesome cdn link  -->
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+      />
 
-    <!-- custom css file link  -->
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body class= "home-container">
+      <!-- custom css file link  -->
+      <link rel="stylesheet" href="css/style.css" />
+    </head>
+    <body class= "home-container">
 
-    <!-- ini navbar dibiarkan saja -->
-    <header class="header">
-      <section class="flex">
-        <a href="dashboard.php" class="logo">
-          <img src="images/upnvj.png" alt="Logo" /> PKM
-        </a>
+        <!-- ini navbar dibiarkan saja -->
+        <header class="header">
+            <section class="flex">
+                <a href="dashboard_admin.php" class="logo">
+                    <img src="images/upnvj.png" alt="Logo" /> PKM
+                </a>
 
-        <!-- Search Form -->
-        <form action="teams.php" method="post" class="search-form">
-            <input type="text" name="search_box" placeholder="Cari judul atau deskripsi tim..." maxlength="100" />
-            <button type="submit" class="fas fa-search"></button>
-        </form>
+                <!-- Search Form -->
+                <form action="dashboard_admin.php" method="post" class="search-form">
+                    <input type="text" name="search_box" placeholder="Cari judul atau deskripsi tim..." maxlength="100" />
+                    <button type="submit" class="fas fa-search"></button>
+                </form>
 
-        <div class="icons">
-          <div id="menu-btn" class="fas fa-bars"></div>
-          <div id="search-btn" class="fas fa-search"></div>
-          <div id="user-btn" class="fas fa-user"></div>
-          <div id="toggle-btn" class="fas fa-sun"></div>
-        </div>
+                <div class="icons">
+                  <!-- <div id="menu-btn" class="fas fa-bars"></div> -->
+                  <div id="search-btn" class="fas fa-search"></div>
+                  <div id="user-btn" class="fas fa-user"></div>
+                  <div id="toggle-btn" class="fas fa-sun"></div>
+                </div>
 
-        <div class="profile">
-          <img src="images/pic-1.jpg" class="image" alt="" />
-          <h3 class="name"><?php echo $nama; ?></h3>
-          <p class="role"><?php echo $nim_nid; ?></p>
-          <!-- <a href="profile.html" class="btn">view profile</a> -->
-          <div class="flex-btn">
-            <a href="logout.php" class="option-btn">Logout</a>
-          </div>
-        </div>
-      </section>
-    </header>
+                <div class="profile">
+                  <img src="images/pic-1.jpg" class="image" alt="" />
+                  <h3 class="name"><?php echo $nama; ?></h3>
+                  <p class="role"><?php echo $nim_nid; ?></p>
+                  <!-- <a href="profile.html" class="btn">view profile</a> -->
+                  <div class="flex-btn">
+                    <a href="logout.php" class="option-btn">Logout</a>
+                  </div>
+                </div>
+            </section>
+        </header>
 
-    <!-- ini sidebar dibiarkan saja -->
-    <div class="side-bar">
-      <div id="close-btn">
-        <i class="fas fa-times"></i>
-      </div>
+        <section class="playlist-videos">
+            <h1 class="heading">Team List</h1>
 
-      <div class="profile">
-        <img src="images/pic-1.jpg" class="image" alt="" />
-        <h3 class="name"><?php echo $nama; ?></h3>
-        <p class="role"><?php echo $nim_nid; ?></p>
-        <!-- <a href="profile.html" class="btn">view profile</a> -->
-      </div>
-
-      <nav class="navbar">
-        <a href="dashboard.php"><i class="fas fa-home"></i><span>home</span></a>
-        <a href="teams.php"
-          ><i class="fas fa-graduation-cap"></i><span>Teams</span></a
-        >
-        <a href="index_invitation.php"
-          ><i class="fas fa-chalkboard-user"></i><span>Invitation</span></a
-        >
-      </nav>
-    </div>
-
-    <section class="playlist-videos">
-        <h1 class="heading">Team Members</h1>
-
-        <div class="box-container">
-            <div class="box">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th style='width: 15%;'>Jenis PKM</th>
-                            <th style='width: 40%;'>Judul</th>
-                            <th style='width: 25%;'>Nama Ketua</th>
-                            <th style=' width: 20%;'>Manage</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (mysqli_num_rows($result_unapproved_teams) > 0) {
-                            while ($row = mysqli_fetch_assoc($result_unapproved_teams)) {
-                                echo "<tr style='height: 70px;'>";
-                                echo "<td>" . $row['pkm_type'] . "</td>";
-                                echo "<td>" . $row['team_name'] . "</td>";
-                                echo "<td>" . "Nama Ketua" . "</td>";
-
-                                echo "<td style='width: 15%;'>";
-                                // echo "<a href='delete_member.php?team_id={$team_id}&member_id={$my_member['user_id']}' class='inline-delete-btn inline-delete-btn'>Hapus</a><br>";
-                                echo "</td>";
-
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='5'>No Teams found.</td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
+            <div class="box-container">
+                <div class="box">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style='width: 15%;'>Jenis PKM</th>
+                                <th style='width: 40%;'>Judul</th>
+                                <th style='width: 25%;'>Nama Ketua</th>
+                                <th style=' width: 20%;'>Manage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (mysqli_num_rows($result_unapproved_teams) > 0): ?>
+                                <?php while ($row = mysqli_fetch_assoc($result_unapproved_teams)): ?>
+                                    <tr style='height: 70px;'>
+                                        <td><?php echo $row['pkm_type']; ?></td>
+                                        <td><?php echo $row['team_name']; ?></td>
+                                        <td>Nama Ketua</td>
+                                        <td style='width: 15%;'>
+                                            <a href='admin_accept_team.php?team_id=<?php echo $row['team_id']; ?>' class='inline-btn'>Accept Team</a><br>
+                                            <a href='admin_decline_team.php?team_id=<?php echo $row['team_id']; ?>' class='inline-delete-btn'>Decline Team</a><br>
+                                            <a href='index_admin_team_detail.php?team_id=<?php echo $row['team_id']; ?>' class='inline-option-btn'>View Team</a>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            <?php else: ?>
+                                <tr><td colspan='5'>No Teams found.</td></tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
 
-    </section>
+        </section>
 
-    <!-- <section class="courses">
-        <h1 class="heading">Team List</h1>
-        <div class="box-container">
-            <?php
-            if (mysqli_num_rows($result_unapproved_teams) > 0) {
-                while ($row = mysqli_fetch_assoc($result_unapproved_teams)) {
-                    echo "<div class='box'>";
-                    echo "<div class='tutor'>";
-                    echo "<div class='info'>";
-                    echo "<h3>" . $row['pkm_type'] . "</h3>";
-                    echo "<h3>" . $row['team_name'] . "</h3>";
-                    echo "<span>" . $row['member_now'] . "/" . $row['member_max'] . "</span>";
-                    echo "<br>";
-                    echo "<br>";
-                    echo "<h3 class='title'>" . $row['description'] . "</h3>";
-                    echo "</div>";
-                    echo "</div>";
-                    echo "<a href='index_admin_team_detail.php?team_id=" . $row['team_id'] . "' class='inline-btn'>View Detail</a>";
-                    echo "</div>";
-                }
-            } else {
-                echo "<h1 class='heading'>Tidak ada tim tersedia.</h1>";
-            }
-            echo "<div class='more-btn'>";
-            ?>
-        </div>
-        <?php
-        if (mysqli_num_rows($result_unapproved_teams) === 1) {
-            echo "<div class='more-btn'>";
-            echo "</div>";
-        }
-        ?>
-    </section> -->
-
-    <!-- custom js file link  -->
-    <script src="js/script.js"></script>
-  </body>
+        <!-- custom js file link  -->
+        <script src="js/script.js"></script>
+    </body>
 </html>

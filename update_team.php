@@ -36,11 +36,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
     // Tambahkan bagian WHERE untuk menyatakan tim mana yang ingin diupdate
     $update_sql .= " WHERE team_id = '$team_id'";
 
+    // Jika pembaruan berhasil, periksa apakah team_name telah berubah
+    $check_name_sql = "SELECT team_name FROM teams WHERE team_id = '$team_id'";
+    $check_name_result = mysqli_query($koneksi, $check_name_sql);
+    if ($check_name_result) {
+        $row = mysqli_fetch_assoc($check_name_result);
+        $current_team_name = $row['team_name'];
+        if ($new_title != $current_team_name) {
+            // Jika team_name berubah, atur status menjadi "Not Approved"
+            $update_status_sql = "UPDATE teams SET status = 'unset' WHERE team_id = '$team_id'";
+            mysqli_query($koneksi, $update_status_sql);
+        }
+    }
+
     // Jalankan kueri SQL UPDATE
     $update_query = mysqli_query($koneksi, $update_sql);
 
     if ($update_query) {
-        // Jika pembaruan berhasil, arahkan kembali ke halaman update dengan data yang baru
+        
+        // Arahkan kembali ke halaman update dengan data yang baru
         header("Location: index_manage_members.php?team_id=$team_id");
         exit();
     } else {

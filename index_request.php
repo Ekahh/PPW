@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id'])) :
     header("Location: index_login.php");
     exit();
-}
+endif;
 
 include 'config.php';
 
@@ -40,10 +40,10 @@ $sql_requests = "
 $result_requests = mysqli_query($koneksi, $sql_requests);
 
 // Tambahkan pengecekan apakah query berhasil dijalankan
-if ($result_requests === false) {
+if ($result_requests === false) :
     echo "Error: " . mysqli_error($koneksi);
     exit();
-}
+endif;
 ?>
 
 <!DOCTYPE html>
@@ -114,45 +114,37 @@ if ($result_requests === false) {
     <h1 class="heading">requests</h1>
 
     <div class="box-container">
-        <?php
-          if (mysqli_num_rows($result_requests) > 0) {
-            while ($row = mysqli_fetch_assoc($result_requests)) {
-                echo "<div class='box'>";
-                echo "<table style='width: 100%;'>";
-                echo "<tr>";
-                echo "<td style='width: 70%;'>";
-                echo "<div class='tutor'>";
-                echo "<div class='info'>";
-                // echo "<h3>" . $row['team_name'] . "</h3>";
-                // echo "<span>" . $row['member_now'] . "/" . $row['member_max'] . "</span>";
-                // echo "<h3 class='title'>" . $row['description'] . "</h3>";
-                echo "<h3>" . $row['nama'] . "</h3>";
-                echo "<span>" . "[" . $row['nim_nid'] . "]" . "</span>";
-                // echo "<h3 class='title'>" . $row['description'] . "</h3>";
-                echo "</div>";
-                echo "</div>";
-                echo "</td>";
-                echo "<td style='width: 30%; text-align: right;'>";
-                echo "<a href='accept_request.php?join_id=" . $row['join_id'] . "' class='inline-btn' style='width:20rem;'>Accept Request</a>";
-                echo "<a href='decline_request.php?join_id=" . $row['join_id'] . "' class='inline-btn' style='width:20rem;'>Decline Request</a>";
-                echo "</td>";
-                echo "</tr>";
-                echo "</table>";
-                echo "</div>";
-            }
-        } else {
-            echo "<h1 class='heading'>No requests found.</h1>";
-        }
-        echo "<div class='more-btn'>";
-        ?>
+        <?php if (mysqli_num_rows($result_requests) > 0) : ?>
+            <?php while ($row = mysqli_fetch_assoc($result_requests)) : ?>
+                <div class="box">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 70%;">
+                                <div class="tutor">
+                                    <div class="info">
+                                        <h3><?php echo $row['nama']; ?></h3>
+                                        <span>[<?php echo $row['nim_nid']; ?>]</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 30%; text-align: right;">
+                                <a href="accept_request.php?join_id=<?php echo $row['join_id']; ?>" class="inline-btn" style="width:20rem;">Accept Request</a>
+                                <a href="decline_request.php?join_id=<?php echo $row['join_id']; ?>" class="inline-btn" style="width:20rem;">Decline Request</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            <?php endwhile; ?>
+        <?php else : ?>
+            <h1 class="heading">No requests found.</h1>
+        <?php endif; ?>
     </div>
-    <?php
-    if (mysqli_num_rows($result_requests) === 1) {
-        echo "<div class='more-btn'>";
-        // echo "<a href='teams.php' class='inline-option-btn'>view all teams</a>";
-        echo "</div>";
-    }
-    ?>
+
+    <?php if (mysqli_num_rows($result_requests) === 1) : ?>
+        <div class="more-btn">
+            <!-- <a href="teams.php" class="inline-option-btn">view all teams</a> -->
+        </div>
+    <?php endif; ?>
 </section>
 
 <!-- Custom JavaScript -->

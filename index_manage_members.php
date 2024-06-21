@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id'])) :
     header("Location: logout.php");
     exit();
-}
+endif;
 
 include 'config.php';
 
@@ -15,10 +15,10 @@ $tahun = $_SESSION['tahun_angkatan'];
 $peran = $_SESSION['peran'];
 
 // Memeriksa apakah team_id ada di URL
-if (!isset($_GET['team_id'])) {
+if (!isset($_GET['team_id'])) :
     echo "Team ID is not specified.";
     exit();
-}
+endif;
 
 $team_id = $_GET['team_id'];
 
@@ -26,10 +26,10 @@ $team_id = $_GET['team_id'];
 $sql_team = "SELECT * FROM teams WHERE team_id = '$team_id'";
 $result_team = mysqli_query($koneksi, $sql_team);
 
-if (mysqli_num_rows($result_team) == 0) {
+if (mysqli_num_rows($result_team) == 0) :
     echo "Team not found.";
     exit();
-}
+endif;
 
 $team = mysqli_fetch_assoc($result_team);
 
@@ -68,11 +68,11 @@ $sql_invitations = "SELECT invitations.invite_id, teams.team_id, teams.team_name
 $result_invitations = mysqli_query($koneksi, $sql_invitations);
 
 $is_invited = mysqli_fetch_assoc($result_invitations);
-
 ?>
 
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -85,6 +85,7 @@ $is_invited = mysqli_fetch_assoc($result_invitations);
     <!-- custom css file link  -->
     <link rel="stylesheet" href="css/style.css" />
 </head>
+
 <body class="home-container">
 
     <!-- Header -->
@@ -139,44 +140,30 @@ $is_invited = mysqli_fetch_assoc($result_invitations);
 
         <div class="row">
             <div class="column">
-            <form action="" method="post" class="save-playlist">
-                <button type="submit"><span><?php echo $team['pkm_type']; ?></span></button>
-            </form>
+                <form action="" method="post" class="save-playlist">
+                    <button type="submit"><span><?php echo $team['pkm_type']; ?></span></button>
+                </form>
 
                 <div class="details">
                     <h3><?php echo $team['team_name']; ?></h3>
                     <p><?php echo $team['description']; ?></p>
                     <?php
-                        // Perbarui bagian HTML yang relevan untuk menambahkan tautan "Leave Team"
-                        if ($is_leader) 
-                        {
-                            echo '<a href="index_update_team.php?team_id=' . $team['team_id'] . '" class="inline-btn" style="margin-right: 10px;">Update</a>';
-                            echo '<a class="inline-delete-btn" onclick="togglePopupDelete()" style="margin-right: 10px;">Delete</a>';
-                            echo '<a href="index_invite_member.php?team_id=' . $team_id . '" class="inline-option-btn" style="margin-right: 10px;">Invite</a>';
-                            echo '<a href="index_request.php" class="inline-option-btn" style="margin-right: 10px;">Request Lists</a>';
-                        } 
-                        
-                        else if ($is_member) 
-                        {
-                            echo '<a href="leave_team.php?team_id=' . $team_id . '" class="inline-delete-btn">Leave Team</a>';
-                        } 
-                        
-                        else if ($is_in_team) 
-                        {
-                            echo '<span class="inline-btn disabled">Already in a team</span>';
-                        } 
-
-                        else if ($is_invited)
-                        {
-                            echo "<a href='accept_invite.php?invite_id=" . $is_invited['invite_id'] . "' class='inline-btn'>Accept Invitation</a>";
-                        }
-
-                        
-                        else 
-                        {
-                            echo '<a name="request_join" href="request_join.php?team_id=' . $team_id . '" class="inline-btn">Request to join team</a>';
-                        }
+                    // Perbarui bagian HTML yang relevan untuk menambahkan tautan "Leave Team"
+                    if ($is_leader) :
                     ?>
+                        <a href="index_update_team.php?team_id=<?php echo $team['team_id']; ?>" class="inline-btn" style="margin-right: 10px;">Update</a>
+                        <a class="inline-delete-btn" onclick="togglePopupDelete()" style="margin-right: 10px;">Delete</a>
+                        <a href="index_invite_member.php?team_id=<?php echo $team_id; ?>" class="inline-option-btn" style="margin-right: 10px;">Invite</a>
+                        <a href="index_request.php" class="inline-option-btn" style="margin-right: 10px;">Request Lists</a>
+                    <?php elseif ($is_member) : ?>
+                        <a href="leave_team.php?team_id=<?php echo $team_id; ?>" class="inline-delete-btn">Leave Team</a>
+                    <?php elseif ($is_in_team) : ?>
+                        <span class="inline-btn disabled">Already in a team</span>
+                    <?php elseif ($is_invited) : ?>
+                        <a href="accept_invite.php?invite_id=<?php echo $is_invited['invite_id']; ?>" class="inline-btn">Accept Invitation</a>
+                    <?php else : ?>
+                        <a name="request_join" href="request_join.php?team_id=<?php echo $team_id; ?>" class="inline-btn">Request to join team</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -194,72 +181,71 @@ $is_invited = mysqli_fetch_assoc($result_invitations);
                             <th>NIM</th>
                             <th>Nama</th>
                             <th>Angkatan</th>
-                            <?php
-                            if ($is_leader) {
-                                echo "<th>Manage</th>";
-                            }
-                            ?>
+                            <?php if ($is_leader) : ?>
+                                <th>Manage</th>
+                            <?php endif; ?>
                             <!-- <th>Profile</th> -->
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        if (mysqli_num_rows($result_my_members) > 0) {
-                            while ($my_member = mysqli_fetch_assoc($result_my_members)) {
-                                echo "<tr style='height: 70px;'>";
-                                echo "<td style='width: 15%;'>" . $my_member['role'] . "</td>";
-                                echo "<td style='width: 25%;'>" . $my_member['nim_nid'] . "</td>";
-                                echo "<td style='width: 25%;'>" . $my_member['nama'] . "</td>";
-                                echo "<td style='width: 20%;'>" . $my_member['tahun_angkatan'] . "</td>";
-                                if ($is_leader) {
-                                    // Cek jika peran bukan ketua, tampilkan tombol hapus member
-                                    if ($my_member['role'] !== 'ketua') {
-                                      echo "<td style='width: 15%;'>";
-                                      echo "<a href='delete_member.php?team_id={$team_id}&member_id={$my_member['user_id']}' class='inline-delete-btn inline-delete-btn'>Hapus</a><br>";
-                                      echo "</td>";
-                                    } else {
-                                      echo "<td style='width: 15%;'></td>"; 
-                                    }
-                                }                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='5'>No members found.</td></tr>";
-                        }
-                        ?>
+                        <?php if (mysqli_num_rows($result_my_members) > 0) : ?>
+                            <?php while ($my_member = mysqli_fetch_assoc($result_my_members)) : ?>
+                                <tr style='height: 70px;'>
+                                    <td style='width: 15%;'><?php echo $my_member['role']; ?></td>
+                                    <td style='width: 25%;'><?php echo $my_member['nim_nid']; ?></td>
+                                    <td style='width: 25%;'><?php echo $my_member['nama']; ?></td>
+                                    <td style='width: 20%;'><?php echo $my_member['tahun_angkatan']; ?></td>
+                                    <?php if ($is_leader) : ?>
+                                        <?php
+                                        // Cek jika peran bukan ketua, tampilkan tombol hapus member
+                                        if ($my_member['role'] !== 'ketua') :
+                                        ?>
+                                            <td style='width: 15%;'>
+                                                <a href='delete_member.php?team_id=<?php echo $team_id; ?>&member_id=<?php echo $my_member['user_id']; ?>' class='inline-delete-btn'>Hapus</a><br>
+                                            </td>
+                                        <?php else : ?>
+                                            <td style='width: 15%;'></td>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else : ?>
+                            <tr><td colspan='5'>No members found.</td></tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div>
         <!-- Tampilkan popup jika ada pesan undangan -->
-        <?php if (!empty($invite_message) || !empty($join_message)): ?>
-        <div class="popup" id="popup-join" style="display: block;">
-            <div class="overlay"></div>
-            <div class="content">
-                <div class="close-btn-popup" onclick="togglePopupjoin()">&times;</div>
-                <h1 class="heading">Status</h1>
-                <p><?php echo !empty($invite_message) ? $invite_message : $join_message; ?></p>
+        <?php if (!empty($invite_message) || !empty($join_message)) : ?>
+            <div class="popup" id="popup-join" style="display: block;">
+                <div class="overlay"></div>
+                <div class="content">
+                    <div class="close-btn-popup" onclick="togglePopupjoin()">&times;</div>
+                    <h1 class="heading">Status</h1>
+                    <p><?php echo !empty($invite_message) ? $invite_message : $join_message; ?></p>
+                </div>
             </div>
-        </div>
         <?php endif; ?>
 
         <!-- Pop Up untuk delete -->
         <div class="popup" id="popup-delete">
-        <div class="overlay"></div>
-        <div class="content">
-            <div class="close-btn-popup" onclick="togglePopupDelete()">&times;</div>
-            <h1 class="heading">Delete Team</h1>
-            <p>Apakah kamu yakin ingin menghapus kelompok?</p>
-            <div class="btn-group">
-                <form action="delete_team.php" method="post">
-                    <input type="hidden" name="team_id" value="<?php echo $team['team_id']; ?>">
-                    <button type="submit" class="delete-btn" name="delete">Iya</button>
-                </form>
-                <form method="post">
-                    <a href="#" class="btn" onclick="togglePopupDelete()">Tidak</a>
-                </form>
+            <div class="overlay"></div>
+            <div class="content">
+                <div class="close-btn-popup" onclick="togglePopupDelete()">&times;</div>
+                <h1 class="heading">Delete Team</h1>
+                <p>Apakah kamu yakin ingin menghapus kelompok?</p>
+                <div class="btn-group">
+                    <form action="delete_team.php" method="post">
+                        <input type="hidden" name="team_id" value="<?php echo $team['team_id']; ?>">
+                        <button type="submit" class="delete-btn" name="delete">Iya</button>
+                    </form>
+                    <form method="post">
+                        <a href="#" class="btn" onclick="togglePopupDelete()">Tidak</a>
+                    </form>
+                </div>
             </div>
         </div>
-
     </section>
 
     <!-- custom js file link  -->
@@ -267,11 +253,11 @@ $is_invited = mysqli_fetch_assoc($result_invitations);
 
     <!-- script popup -->
     <script>
-        <?php if (!empty($invite_message)): ?>
-        document.addEventListener('DOMContentLoaded', function () {
-            var popup = document.getElementById("popup-join");
-            popup.style.display = "block";
-        });
+        <?php if (!empty($invite_message)) : ?>
+            document.addEventListener('DOMContentLoaded', function () {
+                var popup = document.getElementById("popup-join");
+                popup.style.display = "block";
+            });
         <?php endif; ?>
 
         function togglePopupjoin() {
@@ -285,6 +271,7 @@ $is_invited = mysqli_fetch_assoc($result_invitations);
         }
     </script>
 </body>
+
 </html>
 <?php
 // Menutup koneksi database

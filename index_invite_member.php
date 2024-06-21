@@ -131,12 +131,9 @@ $result_invited_students = mysqli_query($koneksi, $sql_invited_students);
         </nav>
     </div>
 
-    <!-- Content -->
+    <!-- Invited Student List -->
     <section class="playlist-videos">
-        <h1 class="heading">
-            Invited Student List
-        </h1>
-
+        <h1 class="heading">Invited Student List</h1>
         <div class="box-container">
             <div class="box">
                 <table class="table">
@@ -149,39 +146,34 @@ $result_invited_students = mysqli_query($koneksi, $sql_invited_students);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        if (mysqli_num_rows($result_invited_students) > 0) {
-                            while ($row = mysqli_fetch_assoc($result_invited_students)) {
-                                echo "<tr>";
-                                echo "<td style='width: 20%;'>" . $row['nim_nid'] . "</td>";
-                                echo "<td style='width: 40%;'>" . $row['nama'] . "</td>";
-                                echo "<td style='width: 20%;'>" . $row['tahun_angkatan'] . "</td>";
-                                echo "<td style='width: 20%;'>";
-                                echo "<form method='post' action='cancel_invite.php'>";
-                                echo "<input type='hidden' name='invite_id' value='" . $row['invite_id'] . "'>"; 
-                                echo "<input type='hidden' name='team_id' value='" . $team_id . "'>"; 
-                                echo "<input type='hidden' name='user_id' value='" . $row['user_id'] . "'>";
-                                echo "<button type='submit' name='cancel-invite' class='inline-delete-btn'>Cancel Invite</button>";
-                                echo "</form>";
-                                echo "</td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='4'>No students found.</td></tr>";
-                        }
-                        
-                        ?>
+                        <?php if (mysqli_num_rows($result_invited_students) > 0): ?>
+                            <?php while ($row = mysqli_fetch_assoc($result_invited_students)): ?>
+                                <tr>
+                                    <td style='width: 20%;'><?php echo $row['nim_nid']; ?></td>
+                                    <td style='width: 40%;'><?php echo $row['nama']; ?></td>
+                                    <td style='width: 20%;'><?php echo $row['tahun_angkatan']; ?></td>
+                                    <td style='width: 20%;'>
+                                        <form method='post' action='cancel_invite.php'>
+                                            <input type='hidden' name='invite_id' value='<?php echo $row['invite_id']; ?>'> 
+                                            <input type='hidden' name='team_id' value='<?php echo $team_id; ?>'> 
+                                            <input type='hidden' name='user_id' value='<?php echo $row['user_id']; ?>'>
+                                            <button type='submit' name='cancel-invite' class='inline-delete-btn'>Cancel Invite</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr><td colspan='4'>No students found.</td></tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div>
     </section>
 
+    <!-- Student List -->
     <section class="playlist-videos">
-        <h1 class="heading">
-            Student List
-        </h1>
-
+        <h1 class="heading">Student List</h1>
         <div class="box-container">
             <div class="box">
                 <table class="table">
@@ -194,26 +186,24 @@ $result_invited_students = mysqli_query($koneksi, $sql_invited_students);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        if (mysqli_num_rows($result_all_students) > 0) {
-                            while ($row = mysqli_fetch_assoc($result_all_students)) {
-                                echo "<tr>";
-                                echo "<td style='width: 20%;'>" . $row['nim_nid'] . "</td>";
-                                echo "<td style='width: 40%;'>" . $row['nama'] . "</td>";
-                                echo "<td style='width: 20%;'>" . $row['tahun_angkatan'] . "</td>";
-                                echo "<td style='width: 20%;'>";
-                                echo "<form method='post' action='invite_member.php'>";
-                                echo "<input type='hidden' name='team_id' value='" . $team_id . "'>"; 
-                                echo "<input type='hidden' name='user_id' value='" . $row['user_id'] . "'>";
-                                echo "<button type='submit' name='invite' class='inline-btn'>Invite</button>";
-                                echo "</form>";
-                                echo "</td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='4'>No students found.</td></tr>";
-                        }
-                        ?>
+                        <?php if (mysqli_num_rows($result_all_students) > 0): ?>
+                            <?php while ($row = mysqli_fetch_assoc($result_all_students)): ?>
+                                <tr>
+                                    <td style='width: 20%;'><?php echo $row['nim_nid']; ?></td>
+                                    <td style='width: 40%;'><?php echo $row['nama']; ?></td>
+                                    <td style='width: 20%;'><?php echo $row['tahun_angkatan']; ?></td>
+                                    <td style='width: 20%;'>
+                                        <form method='post' action='invite_member.php'>
+                                            <input type='hidden' name='team_id' value='<?php echo $team_id; ?>'> 
+                                            <input type='hidden' name='user_id' value='<?php echo $row['user_id']; ?>'>
+                                            <button type='submit' name='invite' class='inline-btn'>Invite</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr><td colspan='4'>No students found.</td></tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
