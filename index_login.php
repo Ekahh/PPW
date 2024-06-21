@@ -1,18 +1,16 @@
 <?php
     session_start();
-    include 'config.php'; // Mengimpor file konfigurasi database
+    include 'config.php'; 
 
     // Ambil pesan undangan dari session (jika ada)
     $message = isset($_SESSION['message']) ? $_SESSION['message'] : "";
-    unset($_SESSION['message']); // Hapus pesan dari session setelah ditampilkan
+    unset($_SESSION['message']); 
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Menghapus semua variabel sesi
         $_SESSION = array();
-        // Menghancurkan sesi
         session_destroy();
 
-        // Mengambil data yang dikirim melalui formulir login
         $nim_email = $_POST['nim_email'];
         $password = $_POST['password'];
 

@@ -105,9 +105,9 @@ $result_unapproved_teams = mysqli_query($koneksi, $sql_unapproved_teams);
                     <table class="table">
                         <thead>
                             <tr>
-                                <th style='width: 15%;'>Jenis PKM</th>
-                                <th style='width: 40%;'>Judul</th>
-                                <th style='width: 25%;'>Nama Ketua</th>
+                                <th style='width: 20%;'>Jenis PKM</th>
+                                <th style='width: 60%;'>Judul</th>
+                                <!-- <th style='width: 25%;'>Nama Ketua</th> -->
                                 <th style=' width: 20%;'>Manage</th>
                             </tr>
                         </thead>
@@ -117,7 +117,7 @@ $result_unapproved_teams = mysqli_query($koneksi, $sql_unapproved_teams);
                                     <tr style='height: 70px;'>
                                         <td><?php echo $row['pkm_type']; ?></td>
                                         <td><?php echo $row['team_name']; ?></td>
-                                        <td>Nama Ketua</td>
+                                        <!-- <td>Nama Ketua</td> -->
                                         <td style='width: 15%;'>
                                             <a href='admin_accept_team.php?team_id=<?php echo $row['team_id']; ?>' class='inline-btn'>Accept Team</a><br>
                                             <a href='admin_decline_team.php?team_id=<?php echo $row['team_id']; ?>' class='inline-delete-btn'>Decline Team</a><br>
